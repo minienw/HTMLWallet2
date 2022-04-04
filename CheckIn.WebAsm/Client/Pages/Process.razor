@@ -1,0 +1,102 @@
+﻿@page "/process/{data}"
+
+@using Microsoft.IdentityModel.Tokens;
+@using Newtonsoft.Json
+@using System.Text
+@using CheckInQrWeb.Core
+@using CheckInQrWeb.Core.Models
+@inject CheckInQrWeb.Core.MainCommand _MainCommand
+
+@*
+<MudGrid class="mud-theme-primary rounded">
+    <MudItem xs="3">
+        <MudText Typo="Typo.h5">Service prodivder</MudText>
+    </MudItem>
+    <MudItem xs="9">
+        <MudText Typo="Typo.h5">@ServiceProvider</MudText>
+    </MudItem>
+</MudGrid>
+<MudGrid>
+    <MudItem xs="12">
+        <MudAlert Severity="Severity.Info" Class="rounded-0">You have been redirected to this page by the service provider (airline, ticketing authority, etc) above. Please upload your QR code using a screenshot or scan it using your telephone to complete the procedure.</MudAlert>
+    </MudItem>
+</MudGrid>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+@if (!string.IsNullOrWhiteSpace(ErrorDisplay))
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudAlert Severity="Severity.Error" Class="rounded-0">@ErrorDisplay</MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+@if (!string.IsNullOrWhiteSpace(WarningDisplay))
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudAlert Severity="Severity.Warning" Class="rounded-0">@WarningDisplay</MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+
+<MudGrid>
+    <MudItem xs="12" md="4">
+        <DccQrUploadComponent Disabled="@(ProcessIsFinished)" OnQRUploaded="ValidateDcc"></DccQrUploadComponent>
+    </MudItem>
+</MudGrid>
+
+<MudGrid>
+    <MudItem xs="12">
+        <QrValidationResultComponent QrValidationMessage="@QrValidationMessage" QrValidationSuccess="QrValidationSuccess"></QrValidationResultComponent>
+    </MudItem>
+</MudGrid>
+
+<SimpleAudit Entries="@AuditEntries"></SimpleAudit>*@
+
+
+@code {
+
+    //TODO what data? QR code?
+    [Parameter]
+    public string Data { get; set; }
+
+    private string ServiceProvider;
+
+    private bool ProcessIsFinished { get; set; } = false;
+    private bool? QrValidationSuccess { get; set; }
+    private string QrValidationMessage { get; set; }
+
+    private string ErrorDisplay { get; set; }
+    private string WarningDisplay { get; set; }
+    private List<AuditEntry> AuditEntries { get; set; } = new();
+
+    private void DisplayResult(MainCommandResult r)
+    {
+
+        ErrorDisplay = r.ErrorDisplay;
+        WarningDisplay = r.WarningDisplay;
+        AuditEntries.Clear();
+        AuditEntries.AddRange(r.AuditEntries);
+
+        QrValidationSuccess = r.Success;
+        QrValidationMessage = r.Message;
+    }
+
+    protected override void OnInitialized()
+    {
+        DisplayResult(_MainCommand.OnInitialized(Data));
+        ServiceProvider = _MainCommand?.InitiatingQrPayload?.ServiceProvider ?? "Error getting service provider from request.";
+    }
+
+    private async Task ValidateDcc(string dccQrData)
+    {
+        //bool? result = await _dialogService.ShowMessageBox(
+        //"Continue?",
+        //_MainCommand.InitiatingQrPayload.Consent,
+        //yesText: "Continue", cancelText: "Cancel");
+
+        DisplayResult(await _MainCommand.ValidateDcc(dccQrData));
+    }
+}

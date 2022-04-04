@@ -1,0 +1,38 @@
+﻿@page "/test"
+
+@using CheckInQrWeb.Components.TestPage;
+
+@inject NavigationManager _navigationManager;
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudAlert Severity="Severity.Info" Class="rounded-0">This ia a testpage to simulate a request from the airliner</MudAlert>
+    </MudItem>
+    <MudItem xs="12">
+        <MudButton link="https://dgca-booking-demo-eu-test.cfapps.eu10.hana.ondemand.com/" 
+        Variant="Variant.Filled" 
+           StartIcon="@Icons.Filled.OpenInNew"
+        Target="_blank"
+        Color="Color.Primary">
+        Go to airline testpage
+    </MudButton></MudItem>
+    <MudItem xs="12" md="4">
+        <UnauthorizedRequestComponent></UnauthorizedRequestComponent>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <JsonRequestComponent OnStartRequest="StartRequest"></JsonRequestComponent>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <AirlinerQRRequestComponent OnQRUploaded="StartRequest"></AirlinerQRRequestComponent>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    private void StartRequest(string input)
+    {
+        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(input);
+        var base64 = Convert.ToBase64String(plainTextBytes);
+        _navigationManager.NavigateTo($"/process/{base64}", true);
+    }
+}

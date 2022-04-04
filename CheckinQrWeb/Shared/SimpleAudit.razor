@@ -1,0 +1,33 @@
+﻿@using CheckInQrWeb.Core.Models
+
+
+<MudExpansionPanels>
+    <MudExpansionPanel>
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                <MudText>Debug auditing</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            @foreach (var entry in Entries)
+            {
+                <MudCard>
+                    <MudCardContent>
+                        <code>
+                            <pre>@entry</pre>
+                        </code>
+                    </MudCardContent>
+                </MudCard>
+            }
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+
+@code {
+
+    [Parameter]
+    public List<string> Entries { get; set; } = new();
+
+}

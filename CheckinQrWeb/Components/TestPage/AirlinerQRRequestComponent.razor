@@ -1,0 +1,37 @@
+﻿<MudCard Outlined="true" Style="height: 300px;">
+    <MudCardContent Style="height: 200px;">
+        <MudText>Airliner QR-image</MudText>
+
+        @if (!ValidQrCode)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Invalid QR code</MudAlert>
+        }
+
+    </MudCardContent>
+    <MudCardActions>
+        <QRUploader OnQRUploaded="QRUploaded"></QRUploader>
+    </MudCardActions>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnQRUploaded { get; set; }
+
+    private bool ValidQrCode { get; set; } = true;
+
+    private async Task QRUploaded(string decoded)
+    {
+        ValidQrCode = true;
+
+        if (string.IsNullOrWhiteSpace(decoded))
+        {
+            ValidQrCode = false;
+        }
+
+        if (ValidQrCode && OnQRUploaded.HasDelegate)
+        {
+            await OnQRUploaded.InvokeAsync(decoded);
+        }
+    }
+}

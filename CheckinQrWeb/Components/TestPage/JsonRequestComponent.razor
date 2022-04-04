@@ -1,0 +1,48 @@
+﻿@using Newtonsoft.Json.Linq
+@inject ISnackbar _snackbar;
+
+<MudCard Outlined="true" Style="height: 300px;">
+    <MudCardContent Style="height: 200px;">
+        <MudText Typo="Typo.subtitle1">JSON data</MudText>
+        <MudTextField Variant="Variant.Outlined" T="string" @bind-Text="@QRTokenData" Lines="5"/>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Class="mt-1" Variant="Variant.Filled" Color="Color.Primary" @onclick="StartRequest">Send</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    private string QRTokenData { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnStartRequest { get; set; }
+
+    private async Task StartRequest()
+    {
+        if (string.IsNullOrWhiteSpace(QRTokenData) ||
+            !IsValidJsonData())
+        {
+            _snackbar.Add("Invalid JSON data", Severity.Error);
+            return;
+        }
+
+        if (OnStartRequest.HasDelegate)
+        {
+            await OnStartRequest.InvokeAsync(QRTokenData);
+        }
+    }
+
+    private bool IsValidJsonData()
+    {
+        try
+        {
+            var ob = JToken.Parse(QRTokenData);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+}

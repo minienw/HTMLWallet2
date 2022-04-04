@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BouncyCastle.NetCore" Version="1.8.10" />
+		<PackageReference Include="MudBlazor" Version="6.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
+	  <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="QRCodeDecoderLibrary">
+	    <HintPath>QRCodeDecoderLibrary.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\PublishProfiles\" />
+	  <Folder Include="Properties\ServiceDependencies\" />
+	</ItemGroup>
+</Project>

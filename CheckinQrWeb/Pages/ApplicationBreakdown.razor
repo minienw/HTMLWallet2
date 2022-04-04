@@ -1,0 +1,42 @@
+﻿@page "/applicationbreakdown"
+@using CheckInQrWeb.Core.Models
+
+<MudText Typo="Typo.h1">Application breakdown</MudText>
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h3">Used components</MudText>
+    </MudItem>
+    <MudItem xs="12">
+        <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" T="ExternalPackageInfo">
+    <HeaderContent>
+        <MudTh>Nr</MudTh>
+        <MudTh>Library</MudTh>
+        <MudTh>License</MudTh>
+        <MudTh>LicenseLink</MudTh>
+        <MudTh>ThirdPartyNotices</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Number</MudTd>
+        <MudTd DataLabel="Library">@context.Library</MudTd>
+        <MudTd DataLabel="License">@context.License</MudTd>
+        <MudTd DataLabel="LicenseLink">@context.LicenseLink</MudTd>
+        <MudTd DataLabel="ThirdPartyNotices">@context.ThirdPartyNotices</MudTd>
+    </RowTemplate>
+</MudTable>
+    </MudItem>
+</MudGrid>
+
+@code   {    
+    private IEnumerable<ExternalPackageInfo> Elements = new List<ExternalPackageInfo>()
+    {
+        new ExternalPackageInfo() { Number = 1, Library = "Microsoft .NET Core", License = "MIT", LicenseLink = "", ThirdPartyNotices = "https://github.com/dotnet/corefx/blob/master/THIRD-PARTY-NOTICES.TXT" },
+        new ExternalPackageInfo() { Number = 2, Library = "BouncyCastle", License = "Custom", LicenseLink = "https://bouncycastle.org/csharp/licence.html", ThirdPartyNotices = "https://github.com/dotnet/corefx/blob/master/THIRD-PARTY-NOTICES.TXT" },
+        new ExternalPackageInfo() { Number = 3, Library = "Mudblazor 6.0.2", License = "MIT", LicenseLink = "https://www.nuget.org/packages/MudBlazor/6.0.2/license"},
+        new ExternalPackageInfo() { Number = 4, Library = "Newtonsoft.Json", License = "MIT", LicenseLink = ""},
+        new ExternalPackageInfo() { Number = 5, Library = "Microsoft System.Drawing.Common", License = "MIT", LicenseLink = ""},
+        new ExternalPackageInfo() { Number = 6, Library = "Microsoft System.IdentityModel.Tokens.Jwt", License = "MIT", LicenseLink = ""},
+        new ExternalPackageInfo() { Number = 7, Library = "QRCodeDecoderLibrary (source code recompiled to .NET standard 2.1)", License = "CPOL", LicenseLink = "https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard"}
+
+    };
+}
