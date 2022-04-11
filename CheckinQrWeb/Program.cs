@@ -37,6 +37,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    //app.UseBrowserLink();
+}
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

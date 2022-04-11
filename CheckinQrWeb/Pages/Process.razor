@@ -6,6 +6,7 @@
 @using CheckInQrWeb.Core.Helpers
 @using CheckInQrWeb.Core.Models
 @using Newtonsoft.Json
+@using CheckInQrWeb.Shared
 @inject VerificationWorkflow _Workflow
 @inject IDialogService _DialogService;
 
@@ -25,16 +26,39 @@
 </MudGrid>
 
 <MudGrid>
+    <MudItem>
+        <MudText>Please upload a file containing a DCC Health Certificate QR Code:</MudText>
+    </MudItem>
+
+    <MudCardActions>
+        <QrImageUploader Disabled="@WorkflowCompleted" OnQRUploaded="ImageUploaded"></QrImageUploader>
+    </MudCardActions>
+
+</MudGrid>
+
+<MudGrid>
 @*    <MudItem xs="8">
         <MudAlert Typo="Typo.h5" Icon="Warning" >@_Workflow.InitiatingQrPayload.Consent</MudAlert>
     </MudItem>
 *@    
-    <MudItem xs="8">Please upload an image of your Covid Certificate QR code:</MudItem>
-    <MudItem xs="8">
-        <DccQrUploadComponent Disabled="@(WorkflowCompleted)" OnQRUploaded="Validate"></DccQrUploadComponent>
-    </MudItem>
 
-@if (WorkflowCompleted && WorkflowSuccess.HasValue && WorkflowSuccess.Value)
+
+@if (!ValidQrCode)
+{
+    <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Invalid QR code</MudAlert>
+}
+
+
+@if (WorkflowCompleted)
+{
+    <MudItem xs="8">@WorkflowMessage</MudItem>
+}
+
+@*    <MudItem xs="8">
+        <DccQrUploadComponent Disabled="@(WorkflowCompleted)" OnQRUploaded="Validate"></DccQrUploadComponent>
+    </MudItem>*@
+
+@if (WorkflowSuccess.HasValue && WorkflowSuccess.Value)
 {
     <MudItem xs="8">Verification sucessful.</MudItem>
     <MudItem xs="8">The DCC contained the following identifying information which will be sent to the Airline:</MudItem>
@@ -49,7 +73,7 @@
     </MudItem>
 }
 
-@if (WorkflowCompleted && WorkflowSuccess.HasValue && !WorkflowSuccess.Value)
+@if (WorkflowCompleted && WorkflowSuccess.HasValue && !WorkflowSuccess.Value && FailureMessages != null)
 {
     <MudItem xs="8">Verification did not succeed for the following reasons:</MudItem>
     <MudItem> 
@@ -114,45 +138,6 @@
         WorkflowMessage = r.Message;
     }
 
-    private async Task Validate(string dccQrData)
-    {
-        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[0], yesText: "Continue", cancelText: "Cancel");
-        if (!consented ?? false)
-        {
-            WorkflowCompleted = true;
-            WorkflowSuccess = false;
-            WorkflowMessage = "Consent to send DCC for verification was not given.";
-            WorkflowExiting = true;
-            return;
-        }
-
-        var r = await _Workflow.ValidateDccAsync(dccQrData);
-        WorkflowCompleted = true;
-        DebugMessages.Clear();
-        DebugMessages.AddRange(r.DebugMessages);
-        WorkflowSuccess = r.Success;
-        WorkflowMessage = r.Message;
-        NotifyEnabled = r.Success;
-        WorkflowExiting = !NotifyEnabled;
-
-        if (!WorkflowSuccess ?? false)
-        {
-            FailureMessages = _Workflow.ResultToken.Claims
-            .Where(x => x.Type == "results") //Flat and repeated.
-            .Select(x => Format(x)).ToArray();
-        }
-        else
-        {
-            //{{"kid":"SsXyRIVSy4Y=","alg":"RS256"}.{"iss":"http://localhost:8081/identity","iat":1649073441,"exp":1649077041,"category":["standard"],"sub":"0123456789ABCDEF0123456789ABCDEF","result":"OK","results":[],"confirmation":"eyJraWQiOiJTc1h5UklWU3k0WT0iLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiIwMTIzNDU2Nzg5QUJDREVGMDEyMzQ1Njc4OUFCQ0RFRiIsInN1YiI6IjAxMjM0NTY3ODlBQkNERUYwMTIzNDU2Nzg5QUJDREVGIiwiaWF0IjoxNjQ5MDczNDQxLCJleHAiOjE2NDkwNzcwNDEsImNhdGVnb3J5IjpbInN0YW5kYXJkIl0sInJlc3VsdCI6Ik9LIiwicG9hIjoiQU1TIiwicG9kIjoiRlJBIiwidmFsaWRmcm9tIjoiMjAyMS0wMS0yOVQxMjowMDowMCswMTowMCIsInZhbGlkVG8iOiIyMDIxLTAxLTI5VDEyOjAwOjAwKzAxOjAwIiwidmFsaWRhdGlvbmNsb2NrIjoiMjAyMS0wMS0yOVQxMjowMDowMCswMTowMCIsInBlcnNvbmFsaW5mb2RjY2V4dHJhY3QiOnsiZm50IjoiQk9VV0VSIiwiZ250IjoiQk9CIiwiZG9iIjoiMTk2MC0wMS0wMSJ9fQ.tEN3E7s2KNgMa1rHfZrHqxoRwlGa-l7bzWOo8DNh8h53zg2TDz43vvsOnAiIhb02q_8YMHJiQJlivhLByhV13Ew9dnWEOs-5FQGgix3NsQGZ3Ez1kscMdqlFaKkzrSoEmnaAAAPB_lvpzlaazufnH-U94gPV-IlfsENXw_tSaA5an7FVffk1VxQRrhKo2Rwgy1qj5j3ge8LaATjOnFzbe6j1bwcOFq9x5cesSKw4LkhlfOBzgeLLq_DS58bmt50Hu8_PaarcXnuquDHds6kW87hczoMr3S1Z2WP3hhkx7nrY9wdaLUca6lxyUJtrFplT3u6hRieIHmrjbMzPCgGikg","personalinfodccextract":{"fnt":"BOUWER","gnt":"BOB","dob":"1960-01-01"}}}
-            var value = _Workflow.ResultToken.Claims.SingleOrDefault(x => x.Type.Equals("personalinfodccextract", StringComparison.InvariantCultureIgnoreCase)).Value;
-            DccExtract = JsonConvert.DeserializeObject<DccExtract>(value);
-        }
-        //debugMessages.Add($);
-        //foreach (var i in resultsClaim)
-        //    string.Join(";", )
-        //    debugMessages.Add(i.ToString());
-    }
-
     private FailureItem Format(System.Security.Claims.Claim claim)
     {
         return JsonConvert.DeserializeObject<FailureItem>(claim.Value);
@@ -164,7 +149,7 @@
 
         var v = splits.Length > 1 ? splits[1] : splits[0];
 
-        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[1], yesText: "Continue", cancelText: "Cancel");
+        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[1], yesText: "Yes", noText: "No");
 
         if (!consented ?? false)
         {
@@ -182,5 +167,58 @@
         WorkflowMessage = r.Success ? r.Message : "The service provider did not recieve the result. Please try the process again.";
         NotifyEnabled = r.Success;
         WorkflowExiting = true;
+    }
+
+    [Parameter]
+    public EventCallback<string> OnQRUploaded { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    private bool ValidQrCode { get; set; } = true;
+
+    private async Task ImageUploaded(string decoded)
+    {
+        await Validate(decoded);
+    }
+
+    private async Task Validate(string dccQrData)
+    {
+        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[0], yesText: "Yes", noText: "No");
+
+        if (!consented ?? false)
+        {
+            WorkflowMessage = "Consent to send DCC for verification was not given.";
+            WorkflowSuccess = false;
+            WorkflowExiting = true;
+            return;
+        }
+
+        var r = await _Workflow.ValidateDccAsync(dccQrData);
+        DebugMessages.Clear();
+        DebugMessages.AddRange(r.DebugMessages);
+        WorkflowSuccess = r.Success;
+        WorkflowMessage = r.Message;
+        NotifyEnabled = r.Success;
+        WorkflowExiting = !NotifyEnabled;
+
+        if (!(WorkflowSuccess ?? false))
+        {
+            if (r.Result == null)
+            {
+                //Assumed service outage.
+                FailureMessages = null;
+                return;
+            }
+
+            FailureMessages = _Workflow.ResultToken.Claims
+            .Where(x => x.Type == "results") //Flat and repeated.
+            .Select(x => Format(x)).ToArray();
+
+            return;
+        }
+
+        var value = _Workflow.ResultToken.Claims.SingleOrDefault(x => x.Type.Equals("personalinfodccextract", StringComparison.InvariantCultureIgnoreCase)).Value;
+        DccExtract = JsonConvert.DeserializeObject<DccExtract>(value);
     }
 }

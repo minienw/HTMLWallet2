@@ -29,7 +29,7 @@ public class HttpPostTokenCommand {
             JsonConvert.SerializeObject(new TokenRequestBody
             {
                 pubKey = args.WalletPublicKey.EncodeDerBase64(),
-                alg = "ES256",
+                alg = "SHA256withECDSA",
             }),
             Encoding.UTF8, "application/json");
 
@@ -56,10 +56,10 @@ public class HttpPostTokenCommand {
                         ?? throw new InvalidOperationException("Unable to get validator token response: required nonce not found in response headers.");
 
             var encKey = httpResponse.Headers.GetValues("x-enc").FirstOrDefault()
-                        ?? throw new InvalidOperationException("Unable to get validator token response: required nonce not found in response headers.");
+                        ?? throw new InvalidOperationException("Unable to get validator token response: required encryption key not found in response headers.");
 
             var sigKey = httpResponse.Headers.GetValues("x-sig").FirstOrDefault()
-                        ?? throw new InvalidOperationException("Unable to get validator token response: required nonce not found in response headers.");
+                        ?? throw new InvalidOperationException("Unable to get validator token response: required sig pub key not found in response headers.");
 
             var decodedNonce = Convert.FromBase64String(nonce);
             var content = await httpResponse.Content.ReadAsStringAsync();

@@ -43,7 +43,6 @@ namespace CheckInQrWeb.Core
             return str.ToString();
         }
 
-
         private string ForDisplay(string result)
         {
             int index;

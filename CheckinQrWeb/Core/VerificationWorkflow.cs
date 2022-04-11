@@ -115,10 +115,15 @@ namespace CheckInQrWeb.Core
                 return new(ResultToken, true, "Success.", debugMessages.ToArray());
 
             }
+            catch (HttpRequestException e)
+            {
+                debugMessages.Add($"Exception: {e}");
+                return new(null, false, "Unable to connect to a verifying service. Please try again later.", debugMessages.ToArray());
+            }
             catch (Exception e)
             {
                 debugMessages.Add($"Exception: {e}");
-                return new(null, false, "Exception!", debugMessages.ToArray());
+                return new(null, false, "Unable to process the validation request at this time. Please try again later.", debugMessages.ToArray());
             }
             finally
             {

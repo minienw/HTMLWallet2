@@ -6,14 +6,13 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckInQrWeb", "CheckinQrWeb\CheckInQrWeb.csproj", "{6B99EB4D-F222-488A-8593-A211A6642B53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4C44B56-60D9-4265-B0DA-D7EC9C287424}"
+	ProjectSection(SolutionItems) = preProject
+		build_and_run_docker.sh = build_and_run_docker.sh
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckInQrWebTests", "CheckInQrWebTests\CheckInQrWebTests.csproj", "{0F7BBD62-7FC6-432F-ADB8-D0E51F999F08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckIn.Shared", "CheckIn.Shared\CheckIn.Shared.csproj", "{BFC236B3-6E87-4F4F-A5AB-2CB4512C473D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckIn.Shared.Tests", "CheckIn.Shared.Tests\CheckIn.Shared.Tests.csproj", "{DEE6E624-C760-4A39-BDEE-DED8408EADE7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeCheckin", "FakeCheckin\FakeCheckin.csproj", "{BF8967F8-B3FD-4DF8-ACA1-1D096DB2D242}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeCheckin", "FakeCheckin\FakeCheckin.csproj", "{BF8967F8-B3FD-4DF8-ACA1-1D096DB2D242}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +28,6 @@ Global
 		{0F7BBD62-7FC6-432F-ADB8-D0E51F999F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F7BBD62-7FC6-432F-ADB8-D0E51F999F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F7BBD62-7FC6-432F-ADB8-D0E51F999F08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFC236B3-6E87-4F4F-A5AB-2CB4512C473D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFC236B3-6E87-4F4F-A5AB-2CB4512C473D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFC236B3-6E87-4F4F-A5AB-2CB4512C473D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFC236B3-6E87-4F4F-A5AB-2CB4512C473D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DEE6E624-C760-4A39-BDEE-DED8408EADE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DEE6E624-C760-4A39-BDEE-DED8408EADE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DEE6E624-C760-4A39-BDEE-DED8408EADE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DEE6E624-C760-4A39-BDEE-DED8408EADE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF8967F8-B3FD-4DF8-ACA1-1D096DB2D242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF8967F8-B3FD-4DF8-ACA1-1D096DB2D242}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF8967F8-B3FD-4DF8-ACA1-1D096DB2D242}.Release|Any CPU.ActiveCfg = Release|Any CPU
