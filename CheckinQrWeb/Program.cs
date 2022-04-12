@@ -43,16 +43,12 @@ if (app.Environment.IsDevelopment())
     //app.UseBrowserLink();
 }
 
-app.UseHttpsRedirection();
-
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
 app.Run();
