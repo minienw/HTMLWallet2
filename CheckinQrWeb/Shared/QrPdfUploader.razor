@@ -32,16 +32,7 @@
         var file = e.File;
 
         await using MemoryStream ms = new();
-        await file.OpenReadStream().CopyToAsync(ms);
 
-        var b = new System.Drawing.Bitmap(ms);
-
-        var decoder = new QrCodeService();
-        var decoded = decoder.GetQRCodeResult(b);
-
-        if (OnQRUploaded.HasDelegate)
-        {
-            await OnQRUploaded.InvokeAsync(decoded);
-        }
+        //TODO PDF
     }
 }

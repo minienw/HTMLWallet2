@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4C44B56-60D9-4265-B0DA-D7EC9C287424}"
 	ProjectSection(SolutionItems) = preProject
 		build_and_run_docker.sh = build_and_run_docker.sh
+		Run Dev Env Success.txt = Run Dev Env Success.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckInQrWebTests", "CheckInQrWebTests\CheckInQrWebTests.csproj", "{0F7BBD62-7FC6-432F-ADB8-D0E51F999F08}"

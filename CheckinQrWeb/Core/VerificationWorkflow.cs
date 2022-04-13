@@ -24,12 +24,15 @@ namespace CheckInQrWeb.Core
         private HttpPostTokenCommandResult _PostTokenResult;
         private AsymmetricCipherKeyPair _WalletSigningKeyPair;
 
-        public VerificationWorkflow(HttpPostTokenCommand httpPostTokenCommand, HttpPostValidateCommand httpPostValidateCommand, HttpGetIdentityCommand httpGetIdentityCommand, HttpPostCallbackCommand httpPostCallbackCommand)
+        private readonly ILogger _Logger;
+
+        public VerificationWorkflow(HttpPostTokenCommand httpPostTokenCommand, HttpPostValidateCommand httpPostValidateCommand, HttpGetIdentityCommand httpGetIdentityCommand, HttpPostCallbackCommand httpPostCallbackCommand, ILogger<VerificationWorkflow> logger)
         {
             _HttpGetIdentityCommand = httpGetIdentityCommand;
             _HttpPostTokenCommand = httpPostTokenCommand;
             _HttpPostValidateCommand = httpPostValidateCommand;
             _HttpPostCallbackCommand = httpPostCallbackCommand;
+            _Logger = logger;
         }
 
         public WorkflowResult<InitiatingQrPayload> OnInitialized(string qrBytesBase64)
@@ -44,17 +47,21 @@ namespace CheckInQrWeb.Core
                 InitiatingQrPayload = JsonConvert.DeserializeObject<InitiatingQrPayload>(jsonData);
                 _InitiatingQrPayloadToken = InitiatingQrPayload?.Token.ToJwtSecurityToken();
 
+                _Logger.LogInformation($"Initiating QR Code: {jsonData}");
+
                 return new(InitiatingQrPayload, true, "Token from URL processed successfully.", debugMessages.ToArray());
             }
             catch (Exception e)
             {
                 debugMessages.Add($"Error reading QR Code: {e}");
+                _Logger.LogError($"Error reading QR Code: {e}");
                 return new(null, false, "Could not process token in URL", debugMessages.ToArray());
             }
         }
 
         public async Task<WorkflowResult<JwtSecurityToken>> ValidateDccAsync(string dccQrData)
         {
+            _Logger.LogInformation("Start validation.");
             var args = new HttpPostValidateArgs();
             var debugMessages = new List<string>();
             try
@@ -118,11 +125,13 @@ namespace CheckInQrWeb.Core
             catch (HttpRequestException e)
             {
                 debugMessages.Add($"Exception: {e}");
+                _Logger.LogError(String.Join("!!!", debugMessages));
                 return new(null, false, "Unable to connect to a verifying service. Please try again later.", debugMessages.ToArray());
             }
             catch (Exception e)
             {
                 debugMessages.Add($"Exception: {e}");
+                _Logger.LogError(String.Join("!!!", debugMessages));
                 return new(null, false, "Unable to process the validation request at this time. Please try again later.", debugMessages.ToArray());
             }
             finally
@@ -130,6 +139,7 @@ namespace CheckInQrWeb.Core
                 //Hint to memory manager
                 args = null;
                 dccQrData = null;
+                _Logger.LogInformation("End validation.");
             }
         }
 
@@ -150,6 +160,7 @@ namespace CheckInQrWeb.Core
             catch (Exception e)
             {
                 debugMessages.Add($"Exception: {e}");
+                _Logger.LogError(String.Join("!!!", debugMessages));
                 return new(false, false, "Exception!", debugMessages.ToArray());
             }
         }

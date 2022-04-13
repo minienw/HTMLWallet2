@@ -1,2 +1,2 @@
-﻿docker build -t wallet:latest -f CheckInQrWeb/. .   #NB the '.' at the end to ensure the current folder is used as the working folder during the build. Otherwise it fails.
-docker run -p 80:80/tcp -p 443:433/tcp --name wallet_latest wallet:latest
+﻿docker build -t wallet:latest .   #NB the '.' at the end to ensure the current folder is used as the working folder during the build. Otherwise it fails.
+docker run -p 8082:80/tcp --name wallet_latest wallet:latest

@@ -1,4 +1,4 @@
-﻿@using CheckInQrWeb.Core
+﻿@*@using CheckInQrWeb.Core
 
 <MudButton HtmlTag="label"
            Variant="Variant.Filled"
@@ -33,15 +33,12 @@
 
         await using MemoryStream ms = new();
         await file.OpenReadStream().CopyToAsync(ms);
-
-        var b = new System.Drawing.Bitmap(ms);
-
         var decoder = new QrCodeService();
-        var decoded = decoder.GetQRCodeResult(b);
+        var decoded = decoder.Decode(ms.GetBuffer());
 
         if (OnQRUploaded.HasDelegate)
         {
             await OnQRUploaded.InvokeAsync(decoded);
         }
     }
-}
+}*@

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using CheckInQrWeb.Core;
 using CheckInQrWeb.Core.Models;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Org.BouncyCastle.Crypto;
 using Xunit;
@@ -59,11 +60,14 @@ namespace CheckIn.Shared.Tests
             var fac = new Moq.Mock<IHttpClientFactory>();
             fac.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(() => new HttpClient());
 
+            var logger = new Moq.Mock<ILogger<VerificationWorkflow>>();
+
             var workflow = new VerificationWorkflow(
                 new HttpPostTokenCommand(fac.Object),
                 new HttpPostValidateCommand(fac.Object),
                 new HttpGetIdentityCommand(fac.Object),
-                new HttpPostCallbackCommand(fac.Object)
+                new HttpPostCallbackCommand(fac.Object),
+                logger.Object
                 );
 
             var r0 = workflow.OnInitialized(QrCodeContentsBase64);
