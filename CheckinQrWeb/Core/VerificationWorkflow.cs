@@ -151,7 +151,7 @@ namespace CheckInQrWeb.Core
                 var args = new HttpPostCallbackCommandArgs
                 {
                     EndpointUri = _ResultTokenServiceUrl,
-                    ResultToken = ResultToken.Claims.First(x => x.Type == "result").Value,
+                    ResultToken = ResultToken.Claims.First(x => x.Type == "confirmation").Value,
                     ValidationAccessToken = _PostTokenResult.ValidationAccessToken
             };
                 var r = await _HttpPostCallbackCommand.ExecuteAsync(args);

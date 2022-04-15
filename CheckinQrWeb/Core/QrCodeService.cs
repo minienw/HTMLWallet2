@@ -17,6 +17,18 @@ namespace CheckInQrWeb.Core
             }
         }
 
+        public string DecodeStream(MemoryStream stream)
+        {
+            var image = SkiaSharp.SKImage.FromEncodedData(stream);
+            using (var skiaImage = SkiaSharp.SKBitmap.FromImage(image))
+            {
+                var skiaReader = new ZXing.SkiaSharp.BarcodeReader();
+                skiaReader.TryInverted = true;
+                var skiaResult = skiaReader.Decode(skiaImage);
+                return skiaResult?.Text;
+            }
+        }
+
         //// image has one QR code
         //if (dataByteArray.Length == 1) return ForDisplay(QRDecoder.ByteArrayToStr(dataByteArray[0]));
 
