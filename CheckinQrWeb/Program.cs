@@ -1,6 +1,7 @@
 using CheckInQrWeb.Core;
 using CheckInQrWeb.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,13 +23,11 @@ builder.Services.AddAuthentication(
     .AddCookie();
 builder.Services.AddHttpClient();
 
-//builder.Services.AddTransient<GetValidationServiceDescriptionDataCommand>();
-//builder.Services.AddTransient<ProcessStartDccValidationRequestCommand>();
 builder.Services.AddTransient<HttpGetIdentityCommand>();
 builder.Services.AddTransient<HttpPostTokenCommand>();
 builder.Services.AddTransient<HttpPostValidateCommand>();
-builder.Services.AddTransient<VerificationWorkflow>();
 builder.Services.AddTransient<HttpPostCallbackCommand>();
+builder.Services.AddTransient<VerificationWorkflow>();
 
 var app = builder.Build();
 

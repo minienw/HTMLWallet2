@@ -5,10 +5,12 @@
 @using CheckInQrWeb.Core
 @using CheckInQrWeb.Core.Helpers
 @using CheckInQrWeb.Core.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @using Newtonsoft.Json
 @using CheckInQrWeb.Shared
 @inject VerificationWorkflow _Workflow
 @inject IDialogService _DialogService;
+@*@inject IWebAssemblyHostEnvironment HostEnvironment*@
 
 <MudGrid class="mud-theme-primary rounded">
     <MudItem xs="8">
@@ -17,88 +19,76 @@
 </MudGrid>
 <br/>
 <p>You have been directed to this page by your travelling service provider.</p><br/>
-<p>We have found the following request:</p><br/>
-<MudGrid>
-    <MudItem xs="8">Service Provider: @_Workflow.InitiatingQrPayload.ServiceProvider</MudItem>
-    <MudItem xs="8">Protocol: @_Workflow.InitiatingQrPayload.Protocol</MudItem>
-    <MudItem xs="8">Protocol Version: @_Workflow.InitiatingQrPayload.ProtocolVersion</MudItem>
-    <MudItem xs="8">Subject: @_Workflow.InitiatingQrPayload.Subject</MudItem>
-</MudGrid>
 
-<MudGrid>
-    <MudItem>
-        <MudText>Please upload a file containing a DCC Health Certificate QR Code:</MudText>
-    </MudItem>
-
-    <MudCardActions>
-        <QrImageUploader Disabled="@WorkflowCompleted" OnQRUploaded="ImageUploaded"></QrImageUploader>
-    </MudCardActions>
-
-</MudGrid>
-
-<MudGrid>
-@*    <MudItem xs="8">
-        <MudAlert Typo="Typo.h5" Icon="Warning" >@_Workflow.InitiatingQrPayload.Consent</MudAlert>
-    </MudItem>
-*@    
-
-
-@if (!ValidQrCode)
+@if (_Workflow.InitiatingQrPayload != null)
 {
-    <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Invalid QR code</MudAlert>
+    <MudGrid>
+        <MudItem xs="8">We have found the following request:</MudItem>
+        <MudItem xs="8">Service Provider: @_Workflow.InitiatingQrPayload.ServiceProvider</MudItem>
+        <MudItem xs="8">Protocol: @_Workflow.InitiatingQrPayload.Protocol</MudItem>
+        <MudItem xs="8">Protocol Version: @_Workflow.InitiatingQrPayload.ProtocolVersion</MudItem>
+        <MudItem xs="8">Subject: @_Workflow.InitiatingQrPayload.Subject</MudItem>
+    </MudGrid>
+
+    <MudGrid>
+        <MudItem>
+            <MudText>Please upload a file containing a DCC Health Certificate QR Code:</MudText>
+        </MudItem>
+
+        <MudCardActions>
+            <QrImageUploader Disabled="@_Workflow.ShowDccUpload" OnQRUploaded="ImageUploaded"></QrImageUploader>
+        </MudCardActions>
+    </MudGrid>
 }
 
+<MudGrid>
 
-@if (WorkflowCompleted)
+@if (_Workflow.AfterDccValidation)
 {
-    <MudItem xs="8">@WorkflowMessage</MudItem>
-}
+    @if (_Workflow.ShowNotify)
+    {
+        <MudItem xs="8">Verification sucessful.</MudItem>
+        <MudItem xs="8">The DCC contained the following identifying information which will be sent to the Airline:</MudItem>
+        <MudItem xs="8">Given Name: @_Workflow.DccExtract.gnt</MudItem>
+        <MudItem xs="8">Family Name: @_Workflow.DccExtract.fnt</MudItem>
+        <MudItem xs="8">Date of Birth: @_Workflow.DccExtract.dob</MudItem>
 
-@*    <MudItem xs="8">
-        <DccQrUploadComponent Disabled="@(WorkflowCompleted)" OnQRUploaded="Validate"></DccQrUploadComponent>
-    </MudItem>*@
-
-@if (WorkflowSuccess.HasValue && WorkflowSuccess.Value)
-{
-    <MudItem xs="8">Verification sucessful.</MudItem>
-    <MudItem xs="8">The DCC contained the following identifying information which will be sent to the Airline:</MudItem>
-    <MudItem xs="8">Given Name: @DccExtract.gnt</MudItem>
-    <MudItem xs="8">Family Name: @DccExtract.fnt</MudItem>
-    <MudItem xs="8">Date of Birth: @DccExtract.dob</MudItem>
-
-    <MudItem xs="8">
-        <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ThumbUpAlt" Style="background-color: yellowgreen; color: white; width: 200px; height: 80px;" OnClick="Notify">
+        <MudItem xs="8">
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ThumbUpAlt" Style="background-color: yellowgreen; color: white; width: 200px; height: 80px;" OnClick="Notify">
                 Verification successful - Send result to @_Workflow.InitiatingQrPayload.ServiceProvider
-        </MudButton>
-    </MudItem>
+            </MudButton>
+        </MudItem>
+    }
+
+    @if (!_Workflow.ShowNotify)
+    {
+        <MudItem xs="8">Verification did not succeed for the following reasons:</MudItem>
+        <MudItem> 
+            <MudGrid>
+                <MudTable Items="@_Workflow.FailureMessages" Hover="true" Breakpoint="Breakpoint.Sm" T="FailureItem">
+                    <HeaderContent>
+                        <MudTh>Type</MudTh>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Message</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.type</MudTd>
+                        <MudTd>@context.ruleIdentifier</MudTd>
+                        <MudTd>@context.customMessage</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudGrid>
+        </MudItem>
+    }
 }
 
-@if (WorkflowCompleted && WorkflowSuccess.HasValue && !WorkflowSuccess.Value && FailureMessages != null)
+
+@if (!String.IsNullOrEmpty(_Workflow.WorkflowMessage))
 {
-    <MudItem xs="8">Verification did not succeed for the following reasons:</MudItem>
-    <MudItem> 
-        <MudGrid>
-            <MudTable Items="@FailureMessages" Hover="true" Breakpoint="Breakpoint.Sm" T="FailureItem">
-                <HeaderContent>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Id</MudTh>
-                    <MudTh>Message</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>@context.type</MudTd>
-                    <MudTd>@context.ruleIdentifier</MudTd>
-                    <MudTd>@context.customMessage</MudTd>
-                </RowTemplate>
-            </MudTable>
-        </MudGrid>
-    </MudItem>
+    <MudItem xs="8">@_Workflow.WorkflowMessage</MudItem>
 }
 
-@*<MudItem xs="12">
-    <MudAlert Severity="Severity.Error" Class="rounded-0"><p>@WorkflowMessage</p></MudAlert>
-</MudItem>*@
-
-@if (WorkflowExiting)
+@if (_Workflow.Exiting)
 {
     <MudItem xs="8">
         <MudAlert Severity="Severity.Info" Class="rounded-0">
@@ -108,74 +98,27 @@
 }
 </MudGrid>
 
-@*<SimpleAudit Entries="@DebugMessages"></SimpleAudit>*@
+@*@if (HostEnvironment.IsDevelopment())
+{
+    <SimpleAudit Entries="@_Workflow.DebugMessages"></SimpleAudit>
+}*@
+<br/>
+<SimpleAudit Entries="@_Workflow.DebugMessages"></SimpleAudit>
 
 @code {
 
-    //TODO what data? QR code?
     [Parameter]
     public string Data { get; set; }
 
-    private bool WorkflowCompleted { get; set; }
-    private bool? WorkflowSuccess { get; set; }
-    private string WorkflowMessage { get; set; }
-    private bool NotifyEnabled { get; set; } 
-    private bool WorkflowExiting { get; set; }
-
-    private FailureItem[] FailureMessages { get; set; }
-
-    private List<string> DebugMessages { get; set; } = new();
-    private DccExtract DccExtract { get; set; }
-
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
-        var r = _Workflow.OnInitialized(Data);
-
-        if (!r.Success)
-            DebugMessages.Clear();
-
-        DebugMessages.AddRange(r.DebugMessages);
-        WorkflowMessage = r.Message;
+        await _Workflow.OnInitializedAsync(Data);
     }
 
     private FailureItem Format(System.Security.Claims.Claim claim)
     {
         return JsonConvert.DeserializeObject<FailureItem>(claim.Value);
     }
-
-    private async Task Notify()
-    {
-        var splits = _Workflow.InitiatingQrPayload.Consent.Split(";");
-
-        var v = splits.Length > 1 ? splits[1] : splits[0];
-
-        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[1], yesText: "Yes", noText: "No");
-
-        if (!consented ?? false)
-        {
-            WorkflowCompleted = true;
-            WorkflowSuccess = false;
-            WorkflowMessage = "Consent to send verification result to your service provider was not given.";
-            WorkflowExiting = true;
-            NotifyEnabled = false;
-            return;
-        }
-
-        var r = await _Workflow.NotifyServiceProvider();
-        DebugMessages.Clear();
-        DebugMessages.AddRange(r.DebugMessages);
-        WorkflowMessage = r.Success ? r.Message : "The service provider did not recieve the result. Please try the process again.";
-        NotifyEnabled = r.Success;
-        WorkflowExiting = true;
-    }
-
-    [Parameter]
-    public EventCallback<string> OnQRUploaded { get; set; }
-
-    [Parameter]
-    public bool Disabled { get; set; }
-
-    private bool ValidQrCode { get; set; } = true;
 
     private async Task ImageUploaded(string decoded)
     {
@@ -184,41 +127,14 @@
 
     private async Task Validate(string dccQrData)
     {
-        var consented = await _DialogService.ShowMessageBox("Continue?", _Workflow.InitiatingQrPayload.Consent.Split(";")[0], yesText: "Yes", noText: "No");
+        await _Workflow.ValidateDccAsync(dccQrData);
+        //var value = _Workflow.ResultToken.Claims.SingleOrDefault(x => x.Type.Equals("personalinfodccextract", StringComparison.InvariantCultureIgnoreCase)).Value;
+        //DccExtract = JsonConvert.DeserializeObject<DccExtract>(value);
+    }
 
-        if (!consented ?? false)
-        {
-            WorkflowMessage = "Consent to send DCC for verification was not given.";
-            WorkflowSuccess = false;
-            WorkflowExiting = true;
-            return;
-        }
 
-        var r = await _Workflow.ValidateDccAsync(dccQrData);
-        DebugMessages.Clear();
-        DebugMessages.AddRange(r.DebugMessages);
-        WorkflowSuccess = r.Success;
-        WorkflowMessage = r.Message;
-        NotifyEnabled = r.Success;
-        WorkflowExiting = !NotifyEnabled;
-
-        if (!(WorkflowSuccess ?? false))
-        {
-            if (r.Result == null)
-            {
-                //Assumed service outage.
-                FailureMessages = null;
-                return;
-            }
-
-            FailureMessages = _Workflow.ResultToken.Claims
-            .Where(x => x.Type == "results") //Flat and repeated.
-            .Select(x => Format(x)).ToArray();
-
-            return;
-        }
-
-        var value = _Workflow.ResultToken.Claims.SingleOrDefault(x => x.Type.Equals("personalinfodccextract", StringComparison.InvariantCultureIgnoreCase)).Value;
-        DccExtract = JsonConvert.DeserializeObject<DccExtract>(value);
+    private async Task Notify()
+    {
+        await _Workflow.NotifyServiceProvider();
     }
 }

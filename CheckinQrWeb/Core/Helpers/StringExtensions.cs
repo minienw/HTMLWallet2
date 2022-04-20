@@ -14,7 +14,7 @@ namespace CheckInQrWeb.Core.Helpers
         }
         
         //TODO is this all that is accepted?
-        public static bool IsValidDccJson(this string dccQrJson)
+        public static bool IsInternationalDccString(this string dccQrJson)
         {
             return dccQrJson.StartsWith("HC1:");
         }
