@@ -8,6 +8,13 @@ public static class Paths
         , @"Bob_Bouwer_1-1-1960_3_3.JPG");
     public static string NotBob => Path.Combine(Path.GetDirectoryName(NCrunch.Framework.NCrunchEnvironment.GetOriginalProjectPath())
         , @"Erikea Musermann 12-8-1964.png");
+    public static string BobFailsWithNull => Path.Combine(Path.GetDirectoryName(NCrunch.Framework.NCrunchEnvironment.GetOriginalProjectPath())
+        , @"bobby_bouwer is ouwer - fails AF.png");
+    public static string BobCroppedFailsWithNull => Path.Combine(Path.GetDirectoryName(NCrunch.Framework.NCrunchEnvironment.GetOriginalProjectPath())
+        , @"bobby_bouwer is ouwer - cropped.png");
+
+    
+
 
     public static string SourceDocument1 => Path.Combine(Path.GetDirectoryName(NCrunch.Framework.NCrunchEnvironment.GetOriginalProjectPath())
         , @"Test Cert SK 2022-01.pdf");

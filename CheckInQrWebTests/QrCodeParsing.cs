@@ -21,5 +21,22 @@ public class QrCodeParsing
         var decoder = new QrCodeService();
         var decoded = decoder.Decode(File.ReadAllBytes(Paths.NotBob));
         Assert.True(decoded.StartsWith("HC1"));
+
+    }
+
+    [Fact]
+    public void BobFailsWithNull()
+    {
+        var decoder = new QrCodeService();
+        var decoded = decoder.Decode(File.ReadAllBytes(Paths.BobFailsWithNull));
+        Assert.True(decoded.StartsWith("HC1"));
+    }
+
+    [Fact]
+    public void CroppedBobFailsWithNull()
+    {
+        var decoder = new QrCodeService();
+        var decoded = decoder.Decode(File.ReadAllBytes(Paths.BobCroppedFailsWithNull));
+        Assert.True(decoded.StartsWith("HC1"));
     }
 }

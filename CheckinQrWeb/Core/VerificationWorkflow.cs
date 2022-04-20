@@ -144,13 +144,13 @@ namespace CheckInQrWeb.Core
 
             try
             {
-                DebugMessages.Add($"Uploaded QR Data starts with: {dccQrData.Substring(0, 10)}");
+                DebugMessages.Add($"Uploaded QR Data starts with: {dccQrData?.Substring(0, 10)}");
 
                 if (!dccQrData.IsInternationalDccString())
                 {
                     _Logger.LogInformation("Invalid DCC QR code (did not start with 'HC1:').");
                     DebugMessages.Add("Invalid DCC QR code (did not start with 'HC1:').");
-                    WorkflowMessage = "Found a QR code in the file provided but it was not the international version.";
+                    WorkflowMessage = "Could not find an international DCC QR code in the file provided.";
                     return;
                 }
 
