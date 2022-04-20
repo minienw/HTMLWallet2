@@ -25,7 +25,7 @@ public class PdfParsing
         {
             pdfBitmap.Image.Save(ms, new BmpEncoder()); //Windows image
 
-            //File.WriteAllBytes("D:\\1 - Page.bmp", ms.ToArray());
+            File.WriteAllBytes("D:\\1 - Page.bmp", ms.ToArray());
             //Top left 30,510 Bottom right 265,743
             //var bmpImage = new Bitmap(ms);
             //var cropRect = new Rectangle(30, 510, 240, 235);
