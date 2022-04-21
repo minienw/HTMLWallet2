@@ -36,12 +36,14 @@ public class CombinedParser
     private bool TryParseAsImage(Stream stream, long size, out string result)
     {
         _Logger.LogDebug("Try decoding as image...");
+        stream.Position = 0;
         var p = new ImageParser();
         return p.TryParse(stream, size, out result);
     }
 
     private bool TryParseAsPdf(Stream stream, out string result)
     {
+        stream.Position = 0;
         _Logger.LogDebug("Try decoding as PDF...");
         var p = new PdfParser(stream);
         return p.TryParse(out result);
