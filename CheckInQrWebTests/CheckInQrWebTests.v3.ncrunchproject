@@ -1,3 +1,21 @@
 ﻿<ProjectConfiguration>
-  <Settings />
+  <Settings>
+    <IgnoredTests>
+      <NamedTestSelector>
+        <TestName>CheckIn.Shared.Tests.PdfParsing.Parse("Bob_bouwer_2021_minor.pdf")</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>CheckIn.Shared.Tests.PdfParsing.Parse("Vacc Cert SK 2022-01.pdf")</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>CheckIn.Shared.Tests.PdfParsing.Parse("Test Cert SK 2022-01.pdf")</TestName>
+      </NamedTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>CheckIn.Shared.Tests.ThirdPartyServicesTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>CheckInQrWebTests.ThirdPartyServicesTests</FixtureName>
+      </FixtureTestSelector>
+    </IgnoredTests>
+  </Settings>
 </ProjectConfiguration>

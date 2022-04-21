@@ -5,9 +5,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>4c451e19-6091-4e3b-8930-78a5eff552b4</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="DtronixPdf" Version="1.0.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />

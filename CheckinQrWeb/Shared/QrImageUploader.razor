@@ -1,6 +1,8 @@
 ﻿@using CheckInQrWeb.Core
+@using CheckInQrWeb.Core.PdfParsing
 @*@using CheckInQrWeb.Core.PdfParsing*@
-@inject ILogger<QrCodeService> _Logger
+@inject ILogger<ImageParser> _Logger
+@inject CombinedParser _Decoder;
 
 <MudButton HtmlTag="label"
            Variant="Variant.Filled"
@@ -22,28 +24,28 @@
 
     private async Task UploadQR(InputFileChangeEventArgs e)
     {
-        const int maxSize = 1024 * 1024 * 5; // 5 MB
-        if (e.File.Size > maxSize)
+        if (!OnQRUploaded.HasDelegate)
+            return;
+
+        await OnQRUploaded.InvokeAsync(await ParseAsync(e));
+    }
+
+    private async Task<string> ParseAsync(InputFileChangeEventArgs e)
+    {
+        try
         {
-            if (OnQRUploaded.HasDelegate)
-            {
-                await OnQRUploaded.InvokeAsync("");
-            }
+            const int maxSize = 512000;
+            if (e.File.Size > maxSize)
+                return "Too big... fail soon.";
+
+            await using MemoryStream ms = new();
+            await e.File.OpenReadStream().CopyToAsync(ms);
+            return _Decoder.Parse(ms, e.File.Name, e.File.Size);
         }
-
-        var file = e.File;
-
-        await using MemoryStream ms = new();
-        await file.OpenReadStream().CopyToAsync(ms);
-        //var b = new System.Drawing.Bitmap(ms);
-        var decoder = new QrCodeService();
-        _Logger.LogDebug("Decoding...");
-        var decoded = decoder.Decode(ms.GetBuffer());
-        _Logger.LogDebug($"Found: {decoded}.");
-
-        if (OnQRUploaded.HasDelegate)
+        catch(Exception ex) //TODO narrower
         {
-            await OnQRUploaded.InvokeAsync(decoded);
+            //TODO Log
+            return "Exception...";
         }
     }
 }

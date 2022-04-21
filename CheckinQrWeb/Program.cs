@@ -28,6 +28,7 @@ builder.Services.AddTransient<HttpPostTokenCommand>();
 builder.Services.AddTransient<HttpPostValidateCommand>();
 builder.Services.AddTransient<HttpPostCallbackCommand>();
 builder.Services.AddTransient<VerificationWorkflow>();
+builder.Services.AddTransient<CombinedParser>();
 
 var app = builder.Build();
 
