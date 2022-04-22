@@ -14,6 +14,7 @@ public class CombinedParserTests
     }
 
     [ExclusivelyUses("files")]
+    [InlineData("bob bouwer 2012_onvolledig dob.pdf")]
     [InlineData("Bobby.JPG")]
     [InlineData("Bob_Bouwer_1-1-1960_3_3.JPG")]
     [InlineData("Erikea Musermann 12-8-1964.png")]
