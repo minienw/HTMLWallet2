@@ -1,5 +1,5 @@
 # Pre-requisites
-Experience with git, docker and docker compose command line.
+Experience with git, docker and docker compose command line. For each individual service, experience with either ASP.NET or Springboot will be required to configure the component.
 
 # System
 The system comprises of 3 modules:
@@ -21,9 +21,9 @@ The Verifier and Wallet images are ready for deployment.
 
 For Validation Service and Airline Stub:
 
-* Create an identity.json and application.properties file following the instructions in the configuration document. 
-* Replace the 2 files in the ‘deploy’ folder and run the ‘docker build’ command from the file ‘build_and_run_docker.sh’ to create the deployable image with tag ‘pub_latest’. 
-* Run the docker-compose file in the ‘deploy’ folder to create the container. 
+1. Create an identity.json and application.properties file following the instructions in the configuration document. 
+2. Replace the 2 files in the ‘deploy’ folder and run the ‘docker build’ command from the file ‘build_and_run_docker.sh’ to create the deployable image with tag ‘pub_latest’. 
+3. Run the docker-compose file in the ‘deploy’ folder to create the container. 
 
 For the wallet:
 
