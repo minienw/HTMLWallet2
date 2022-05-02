@@ -8,6 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4C44B56-60D9-4265-B0DA-D7EC9C287424}"
 	ProjectSection(SolutionItems) = preProject
 		build_and_run_docker.sh = build_and_run_docker.sh
+		CONFIGURATION.md = CONFIGURATION.md
+		DEPLOY.md = DEPLOY.md
+		LICENSE.md = LICENSE.md
+		README.md = README.md
 		Run Dev Env Success.txt = Run Dev Env Success.txt
 	EndProjectSection
 EndProject

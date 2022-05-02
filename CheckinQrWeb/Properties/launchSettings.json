@@ -11,21 +11,13 @@
     "CheckinQrWeb": {
       "commandName": "Project",
       "launchBrowser": true,
-      "environmentVariables": {
+            "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      //"applicationUrl": "http://192.168.178.12:8082;",
+
       "applicationUrl": "http://localhost:9002;",
       "dotnetRunMessages": true
     },
-    //"IIS Express": {
-    //  "commandName": "IISExpress",
-    //  "launchBrowser": true,
-    //  "applicationUrl": "https://localhost:4001;http://localhost:4000;",
-    //  "environmentVariables": {
-    //    "ASPNETCORE_ENVIRONMENT": "Development"
-    //  }
-    //},
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,

@@ -10,7 +10,7 @@
 @using CheckInQrWeb.Shared
 @inject VerificationWorkflow _Workflow
 @inject IDialogService _DialogService;
-@*@inject IWebAssemblyHostEnvironment HostEnvironment*@
+@inject IWebAssemblyHostEnvironment _HostEnvironment
 
 <MudGrid class="mud-theme-primary rounded">
     <MudItem xs="8">
@@ -42,7 +42,6 @@
 }
 
 <MudGrid>
-
 @if (_Workflow.AfterDccValidation)
 {
     @if (_Workflow.ShowNotify)
@@ -98,12 +97,10 @@
 }
 </MudGrid>
 
-@*@if (HostEnvironment.IsDevelopment())
+@if (_HostEnvironment.IsDevelopment())
 {
     <SimpleAudit Entries="@_Workflow.DebugMessages"></SimpleAudit>
-}*@
-<br/>
-<SimpleAudit Entries="@_Workflow.DebugMessages"></SimpleAudit>
+}
 
 @code {
 
