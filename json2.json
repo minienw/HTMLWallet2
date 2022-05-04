@@ -1,0 +1,101 @@
+{
+  "id": "/subscriptions/40731bc6-0b72-4145-8fac-8108c4098dd1/resourceGroups/MinIenW-rg/providers/Microsoft.Resources/deployments/aks_template",
+  "location": null,
+  "name": "aks_template",
+  "properties": {
+    "correlationId": "692819ad-d74a-4494-bd15-155b19ce7b53",
+    "debugSetting": null,
+    "dependencies": [],
+    "duration": "PT4M14.1318476S",
+    "error": null,
+    "mode": "Incremental",
+    "onErrorDeployment": null,
+    "outputResources": [
+      {
+        "id": "/subscriptions/40731bc6-0b72-4145-8fac-8108c4098dd1/resourceGroups/MinIenW-rg/providers/Microsoft.ContainerService/managedClusters/tvwallet2",
+        "resourceGroup": "MinIenW-rg"
+      }
+    ],
+    "outputs": {
+      "controlPlaneFQDN": {
+        "type": "String",
+        "value": "tvwallet2-e106ac3f.hcp.westeurope.azmk8s.io"
+      }
+    },
+    "parameters": {
+      "dnsPrefix": {
+        "type": "String",
+        "value": "tvwallet2"
+      },
+      "enableAzurePolicy": {
+        "type": "Bool",
+        "value": false
+      },
+      "enableHttpApplicationRouting": {
+        "type": "Bool",
+        "value": false
+      },
+      "enablePrivateCluster": {
+        "type": "Bool",
+        "value": false
+      },
+      "enableRBAC": {
+        "type": "Bool",
+        "value": true
+      },
+      "kubernetesVersion": {
+        "type": "String",
+        "value": "1.23.5"
+      },
+      "location": {
+        "type": "String",
+        "value": "westeurope"
+      },
+      "networkPlugin": {
+        "type": "String",
+        "value": "kubenet"
+      },
+      "osDiskSizeGB": {
+        "type": "Int",
+        "value": 0
+      },
+      "resourceName": {
+        "type": "String",
+        "value": "tvwallet2"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.ContainerService",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "westeurope"
+            ],
+            "properties": null,
+            "resourceType": "managedClusters"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "templateHash": "219965384739395143",
+    "templateLink": null,
+    "timestamp": "2022-05-03T13:51:54.385339+00:00",
+    "validatedResources": null
+  },
+  "resourceGroup": "MinIenW-rg",
+  "tags": null,
+  "type": "Microsoft.Resources/deployments"
+}
