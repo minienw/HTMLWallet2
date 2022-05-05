@@ -12,10 +12,12 @@
       "commandName": "Project",
       "launchBrowser": true,
             "environmentVariables": {
-        //"ASPNETCORE_ENVIRONMENT": "Development"
+            "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:9002;",
-      "dotnetRunMessages": true
+      "sslPort": 9003,
+      "dotnetRunMessages": true,
+      "useSSL": true
     },
     "Docker": {
       "commandName": "Docker",

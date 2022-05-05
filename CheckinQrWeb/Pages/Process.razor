@@ -10,7 +10,7 @@
 @using CheckInQrWeb.Shared
 @inject VerificationWorkflow _Workflow
 @inject IDialogService _DialogService;
-@inject IWebAssemblyHostEnvironment _HostEnvironment
+@inject IWebHostEnvironment _HostEnvironment
 
 <MudGrid class="mud-theme-primary rounded">
     <MudItem xs="8">
@@ -58,7 +58,6 @@
             </MudButton>
         </MudItem>
     }
-
     @if (!_Workflow.ShowNotify)
     {
         <MudItem xs="8">Verification did not succeed for the following reasons:</MudItem>
@@ -99,6 +98,7 @@
 
 @if (_HostEnvironment.IsDevelopment())
 {
+    <br/><br/>
     <SimpleAudit Entries="@_Workflow.DebugMessages"></SimpleAudit>
 }
 

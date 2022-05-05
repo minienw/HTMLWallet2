@@ -86,6 +86,7 @@ spec:
       labels:
         app: ssl
     spec:
+      terminationGracePeriodSeconds: 31
       nodeSelector:
         "beta.kubernetes.io/os": linux
       containers:
