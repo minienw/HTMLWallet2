@@ -1,0 +1,278 @@
+{
+  "id": "http://192.168.178.12:7001/identity",
+  "verificationMethod": [
+    {
+      "id": "http://192.168.178.12:7001/verificationmethod#AccessTokenSign-1",
+      "type": "JsonWebKey2020",
+      "controller": "http://192.168.178.12:7001/identity",
+      "publicKeyJwk": {
+        "x5c": [
+          "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAp4aod1QhVQIZ5cVW05qZUIOALxaFn+sVblneSxPKuvuaW3V/OTcm8sby8AyGYuhLsIkb65/afrbn5hC1E3RMcDJu9MJByvS0PReckuVgxJZE9FzAFJLpld5OScCSIwEabCyXOEi/324IfGnzNZYxBUa3Rb69ep1J3H7Ddp1VZXeaKPcAaKQ/nvCFle0TERRuXOysAt/m1i2hOSBKNE7KtyCRwFIn1dG7HcrpHOYzONTeQIEEw1kPjRszDU6EG7F7alMibar781ZNuHD1V/jRDDPILi9u5VHV1N42MDX+60SjOlBjY+7ncet+Yem0gGvnvcQI1f+BUyN0jVUppFbX7X59+pmQSonpfWnCiDWU32qsaMdue+GCi331vk79kKOSH9QlBWPXVL1GTFnoQjb/oTiMeKy1qsdeGN/x8GwQMCJG0xt2ncqguUdk6y9uaNxZboWpB9w+heZtc8YfqdiQJuM5HAM355kCgl0cUci+9hCQJeW/YcEAGSQPUW2lZbomRtoc41AcK6k0dIzD20Ej3rDxWxvqwOBz1TDsuGnGVcYXYQcnHbFJWfRK27l+yypg0gsIVWpND5y7W+Age6kj/GMDCM2LFGra30OjatF+SEt6Mtk0Wh0Gx1JIPPEc+9PYDQ5HsfNQO00HuGS7rHtMQUbWMqpRZGJgYCaQuSXLD7cCAwEAAQ=="
+        ],
+        "kid": "L6TcjnbZge4=",
+        "alg": "RS256",
+        "use": "sig"
+      }
+    }
+  ],
+  "service": [
+    {
+      "id": "http://192.168.178.12:7001/identity/service#AccessTokenService",
+      "type": "AccessTokenService",
+      "serviceEndpoint": "http://192.168.178.12:7001/token"
+    },
+    {
+      "id": "http://192.168.178.12:7001/identity/service#ResultTokenService",
+      "type": "ResultTokenService",
+      "serviceEndpoint": "http://192.168.178.12:7001/callback"
+    }
+  ]
+}
+
+openapi: 3.0.3
+info:
+  title: Airline Stub
+  description: Airline component of Travel Validation System.
+  version: '2.0'
+  license:
+    name: EUPL 1.2
+    url: https://spdx.org/licenses/EUPL-1.2.html
+tags:
+  - name: decorator-controller
+    description: Decorator Controller
+  - name: identity-controller
+    description: Identity Controller
+paths:
+  /identity:
+    get:
+      tags:
+        - identity-controller
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity''
+              description: Validation access token as JWT.
+        '5XX':
+          description: Various server side errors.
+  /callback:
+    post:
+      tags:
+        - decorator-controller
+      summary: validationResultCallback
+      operationId: validationResultCallbackUsingPOST
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackRequestBody'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Subject not found
+        '5XX':
+          description: Various server side errors.
+  /token:
+    post:
+      tags:
+        - decorator-controller
+      summary: token
+      operationId: tokenUsingPOST
+      security:
+        - initiatingToken: []
+      parameters:
+        - in: header
+          name: x-version
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            x-enc:
+              schema:
+                type: string
+                description: Base 64 of encryption key (RSA public key) for DCC encryption scheme.
+            x-nonce:
+              schema:
+                type: string
+                description: Base 64 of nonce - random byte array, length 16 - ultimately used as an encryption parameter in the DCC encryption scheme.
+            x-sig:
+              schema:
+                type: string
+                description: Base 64 of verification key (RSA public key) for DCC encryption scheme.
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Validation access token as JWT.
+        '401':
+          description: Unauthorized
+        '5XX':
+          description: Various server side errors.
+components:
+  securitySchemes:
+    initiatingToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: See '#/components/schemas/InitiatingQrPayload'
+  schemas:
+    CallbackRequestBody:
+      title: CallbackRequestBody
+      required:
+        - confirmationToken
+      type: object
+      properties:
+        confirmationToken:
+          type: string
+          description: JWT containing ConfirmationTokenPayload.
+    ConfirmationTokenPayload:
+      title: ConfirmationTokenPayload
+      required:
+        - category
+        - exp
+        - iat
+        - jti
+        - personalinfodccextract
+        - poa
+        - pod
+        - result
+        - sub
+        - validTo
+        - validationclock
+        - validfrom
+      type: object
+      properties:
+        category:
+          type: array
+          items:
+            type: string
+        exp:
+          type: integer
+          format: int64
+        iat:
+          type: integer
+          format: int64
+        jti:
+          type: string
+        personalinfodccextract:
+          $ref: '#/components/schemas/DccExtract'
+        poa:
+          type: string
+        pod:
+          type: string
+        result:
+          type: string
+        sub:
+          type: string
+        validTo:
+          type: string
+        validationclock:
+          type: string
+        validfrom:
+          type: string
+    DccExtract:
+      title: DccExtract
+      type: object
+      properties:
+        dob:
+          type: string
+        fnt:
+          type: string
+        gnt:
+          type: string
+    InitiatingQrPayload:
+      title: InitiatingQrPayload
+      required:
+        - consent
+        - privacyUrl
+        - protocol
+        - protocolVersion
+        - serviceIdentity
+        - serviceProvider
+        - subject
+        - token
+      type: object
+      properties:
+        consent:
+          type: string
+        privacyUrl:
+          type: string
+        protocol:
+          type: string
+        protocolVersion:
+          type: string
+        serviceIdentity:
+          type: string
+        serviceProvider:
+          type: string
+        subject:
+          type: string
+        token:
+          type: string
+    TokenRequestBody:
+      title: TokenRequestBody
+      required:
+        - alg
+        - pubKey
+      type: object
+      properties:
+        alg:
+          type: string
+        pubKey:
+          type: string
+    Identity:
+      title: Identity
+      type: object
+      properties:
+        id: 
+          type: string
+
+        verificationMethod: 
+          type: array
+          items: 
+            type: object
+            properties: 
+              id: 
+                type: string
+              type: 
+                type: string
+              controller: 
+                type: string
+              publicKeyJwk: 
+                type: object
+                properties: 
+                  x5c: 
+                    type: array
+                    items: 
+                      type: string
+                  kid: 
+                    type: string
+                  alg: 
+                    type: string
+                  use: 
+                    type: string
+        service: 
+          type: array
+          items: 
+            type: object
+            properties: 
+              id: 
+                type: string
+              type: 
+                type: string
+              serviceEndpoint: 
+                type: string

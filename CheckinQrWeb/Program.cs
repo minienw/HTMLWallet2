@@ -22,13 +22,11 @@ builder.Services.AddAuthentication(
         CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
 builder.Services.AddHttpClient();
-
 builder.Services.AddTransient<HttpGetIdentityCommand>();
 builder.Services.AddTransient<HttpPostTokenCommand>();
 builder.Services.AddTransient<HttpPostValidateCommand>();
 builder.Services.AddTransient<HttpPostCallbackCommand>();
 builder.Services.AddTransient<VerificationWorkflow>();
-builder.Services.AddTransient<CombinedParser>();
 
 var app = builder.Build();
 

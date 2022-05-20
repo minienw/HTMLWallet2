@@ -7,6 +7,10 @@ The fill list of component is:
 * The dcc validation and business rule evaluation service - https://github.com/minienw/onlineverification_code
 * A stub to facilitate testing - https://github.com/minienw/airlinestub
 
+
+
+
+
 ## Development
 
 This is a simple .Net 6 Blazor Web Application.

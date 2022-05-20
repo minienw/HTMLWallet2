@@ -14,10 +14,8 @@
             "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:9002;",
-      "sslPort": 9003,
-      "dotnetRunMessages": true,
-      "useSSL": true
+      "applicationUrl": "http://192.168.178.12:7002;",
+      "dotnetRunMessages": true
     },
     "Docker": {
       "commandName": "Docker",

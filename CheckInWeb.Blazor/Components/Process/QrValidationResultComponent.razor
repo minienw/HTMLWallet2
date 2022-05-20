@@ -1,0 +1,32 @@
+﻿@if (WorkflowCompleted && QrValidationSuccess.HasValue && QrValidationSuccess.Value)
+    {
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ThumbUpAlt" 
+    Style="background-color: yellowgreen; color: white; width: 200px; height: 60px;"
+    >
+                Verification successful
+            </MudButton>
+        <MudItem xs="12">
+            <MudAlert Severity="Severity.Info" Class="rounded-0">
+                <p>You can close this browser window and continue with the check-in procedure at the airline webpage.</p>
+                </MudAlert>
+        </MudItem>
+    }
+
+
+@if (WorkflowCompleted && QrValidationSuccess.HasValue && !QrValidationSuccess.Value)
+{
+        <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ThumbDownAlt" 
+Style="background-color: coral; color: white; width: 200px; height: 60px;"
+>
+            Verification successful
+        </MudButton>
+        <MudItem xs="12">
+            <MudAlert Severity="Severity.Error" Class="rounded-0"><p>@QrValidationMessage</p></MudAlert>
+        </MudItem>
+
+}
+@code {
+    [Parameter] public bool? QrValidationSuccess { get; set; }
+    [Parameter] public string QrValidationMessage { get; set; }
+    [Parameter] public bool WorkflowCompleted { get; set; }
+}

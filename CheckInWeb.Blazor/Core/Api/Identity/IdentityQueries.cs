@@ -1,8 +1,6 @@
 ﻿using System.Text.RegularExpressions;
-using CheckInQrWeb.Core.Models;
-using CheckInQrWeb.Core.Models.api.Identity;
 
-namespace CheckInQrWeb.Core;
+namespace CheckInWeb.Blazor.Core.Api.Identity;
 
 public static class IdentityQueries
 {

@@ -1,8 +1,5 @@
 ﻿@using CheckInQrWeb.Core
-@using CheckInQrWeb.Core.PdfParsing
-@*@using CheckInQrWeb.Core.PdfParsing*@
-@inject ILogger<ImageParser> _Logger
-@inject CombinedParser _Decoder;
+@*@inject HttpPostParseDccCommand _HttpPostParseDcc;*@
 
 <MudButton HtmlTag="label"
            Variant="Variant.Filled"
@@ -40,7 +37,8 @@
 
             await using MemoryStream ms = new();
             await e.File.OpenReadStream().CopyToAsync(ms);
-            return _Decoder.Parse(ms, e.File.Name, e.File.Size);
+            //return _Decoder.Parse(ms, e.File.Name, e.File.Size);
+            return "HC1: something"; //TODO 
         }
         catch(Exception ex) //TODO narrower
         {

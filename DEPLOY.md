@@ -29,3 +29,49 @@ For the wallet:
 
 Run the image in Docker, optionally with the environment variable ASPNETCORE_ENVIRONMENT set to a value of ‘Development’ to show debug information on the Process page, otherwise leave blank.
 
+
+
+
+
+
+
+
+
+11 May 2022
+13:02
+
+
+Windows - Install WSL (we used Ubuntu 20.04)
+Install AZ command line
+Docker Desktop and Compose
+
+az login
+export KUBECONFIG=/mnt/d/Users/ms1/.kube/config
+
+2. Create a resource group in which to install the k8s clusters.
+
+cd… pick one of the 
+
+./kubectl_login.sh 
+
+cd /mnt/d/Repos/MinIenW/validationservice/azurekubernetes
+./delete_aks.sh
+cd /mnt/d/Repos/MinIenW/airlinestub/azurekubernetes
+./delete_aks.sh
+cd /mnt/d/Repos/MinIenW/fixit/HTMLWallet2/CheckinQrWeb/azurekubernetes
+./delete_aks.sh
+
+//Reverse order
+./setup_aks.sh
+./kubectl_login.sh
+./deploy_aks.sh
+
+cd /mnt/d/Repos/MinIenW/airlinestub/azurekubernetes
+./setup_aks.sh
+./kubectl_login.sh
+./deploy_aks.sh
+
+cd /mnt/d/Repos/MinIenW/validationservice/azurekubernetes
+./setup_aks.sh
+./kubectl_login.sh
+./deploy_aks.sh

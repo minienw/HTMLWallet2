@@ -1,0 +1,64 @@
+﻿@inject IDialogService _DialogService;
+
+
+<MudCard Outlined="true" >
+    <MudCardContent >
+        <MudText>Upload immage of DCC Health QR Code</MudText>
+
+        @if (!ValidQrCode)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Invalid QR code</MudAlert>
+        }
+
+    </MudCardContent>
+    <MudCardActions>
+        <QRUploader Disabled="@Disabled" OnQRUploaded="ImageUploaded"></QRUploader>
+    </MudCardActions>
+</MudCard>
+
+<MudCard Outlined="true" >
+    <MudCardContent >
+        <MudText>Upload PDF from your issuing authority containing DCC Health QR Code</MudText>
+
+        @if (!ValidQrCode)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Invalid QR code</MudAlert>
+        }
+
+    </MudCardContent>
+    <MudCardActions>
+        <QRUploader Disabled="@Disabled" OnQRUploaded="PdfUploaded"></QRUploader>
+    </MudCardActions>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnQRUploaded { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+    
+    private bool ValidQrCode { get; set; } = true;
+
+    private async Task ImageUploaded(string decoded)
+    {
+        ValidQrCode = true;
+
+        if (string.IsNullOrWhiteSpace(decoded))
+        {
+            ValidQrCode = false;
+        }
+
+        if (ValidQrCode && OnQRUploaded.HasDelegate)
+        {
+            await OnQRUploaded.InvokeAsync(decoded);
+        }
+    }
+
+
+    private async Task PdfUploaded(string decoded)
+    {
+    }
+
+}
